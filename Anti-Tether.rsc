@@ -1,0 +1,4 @@
+/ip firewall layer7-protocol
+add name="Tethering" regexp=".*((android|iphone|ipad|windows\\ phone|windows\\ ce|symbian|blackberry|palm|smartphone|mobile|nokia|motorola|samsung|sonyericsson|sgh-|lg-|sie-|htc-|oppo-|lenovo-|zte-|vivo-|micromax-|lava-|panasonic-|sony\\ xperia|oneplus|huawei|redmi|miui|asus|meizu|coolpad|letv|gionee|blackview|zte|umi|tecno|infinix|itel|tecno|doogee|leagoo|cubot|oukitel|vernee|umidigi|umidigis|homtom|bluboo|geotel|cubot|elephone|thl|vkworld|jiayu|ulefone|agm|symphony|walton|waltonprimo|carbonn|gfive|micromax|dexp|qmobile|myphone|kingstar|obex|ipod|windows\\ nt|mac\\ os|linux|openbsd|freebsd|netbsd|blackberry) [a-zA-Z0-9._%-]+@([a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}|[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)"
+/ip firewall filter
+add chain=forward layer7-protocol=Tethering action=drop
