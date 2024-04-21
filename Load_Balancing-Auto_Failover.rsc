@@ -25,22 +25,20 @@
     :delay 10s
     $healthCheck
 
-    # Calculate active WAN interfaces
-    :local wan1Status [/interface get $wan1 disabled]
-    :local wan2Status [/interface get $wan2 disabled]
+    # Check if WAN interfaces are disabled and unreachable
+    :local wan1Disabled [/interface get $wan1 disabled]
+    :local wan2Disabled [/interface get $wan2 disabled]
+    :if (($wan1Disabled = false) && ([/ping $target1 count=1] = 3)) do={
+        /interface set $wan1 disabled=yes
+    }
+    :if (($wan2Disabled = false) && ([/ping $target2 count=1] = 3)) do={
+        /interface set $wan2 disabled=yes
+    }
 
     # Enable/disable WAN interfaces for load balancing
-    :if (($wan1Status = false) && ($wan2Status = false)) do={
-        /interface bonding set mode=balance-rr primary=$wan1 slaves=$wan2
-    } else={
+    :if (($wan1Disabled = true) || ($wan2Disabled = true)) do={
         /interface bonding disable
-    }
-
-    # Check if disabled interface is now reachable
-    :if (($wan1Status = true) && ([/ping $target1 count=1] != 3)) do={
-        /interface set $wan1 disabled=no
-    }
-    :if (($wan2Status = true) && ([/ping $target2 count=1] != 3)) do={
-        /interface set $wan2 disabled=no
+    } else={
+        /interface bonding set mode=balance-rr primary=$wan1 slaves=$wan2
     }
 }
